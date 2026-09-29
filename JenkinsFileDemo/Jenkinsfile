@@ -2,8 +2,9 @@ pipeline {
 
     agent any
      environment {
-        DOCKER = 'C:/Users/DELL/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe'
-    }
+       DOCKER = 'C:/Users/DELL/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe'
+       IMAGE_NAME = 'jenkins-demo-app'
+}
 
     parameters {
         string(
@@ -24,7 +25,7 @@ pipeline {
         }
         stage('Check Docker'){
             steps{
-                bat 'docker --version'
+                bat '"%DOCKER%" --version'
             }
         }
         stage('Dependencies'){
@@ -39,14 +40,14 @@ pipeline {
         }
         stage('Build'){
             steps{
-              bat 'docker build -t %IMAGE_NAME%:%BUILD_NUMBER% .'
+              bat '"%DOCKER%" build -t %IMAGE_NAME%:%BUILD_NUMBER% .'
 
             }
         }
         stage('Run Container'){
             steps{
               bat '''
-                docker run -d --name node-app-%BUILD_NUMBER% -p %APP_PORT%:3000 %IMAGE_NAME%:%BUILD_NUMBER%
+                "%DOCKER%" run -d --name node-app-%BUILD_NUMBER% -p %APP_PORT%:3000 %IMAGE_NAME%:%BUILD_NUMBER%
               '''
 
             }
@@ -57,7 +58,7 @@ pipeline {
               bat '''
                  echo APP Deployed Successfully
                  echo Open http://localhost:%APP_PORT%
-                 docker ps
+                 "%DOCKER%" ps
               '''  
 
 
