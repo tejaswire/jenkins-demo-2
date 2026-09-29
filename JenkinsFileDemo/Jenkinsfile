@@ -1,6 +1,9 @@
 pipeline {
 
     agent any
+     environment {
+        DOCKER = 'C:/Users/DELL/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe'
+    }
 
     parameters {
         string(
